@@ -9,6 +9,7 @@ function check_zookeeper {
     fi
 }
 check_zookeeper
+sleep 5
 
 java -cp KafkaOffsetMonitor-assembly-0.2.1.jar \
      com.quantifind.kafka.offsetapp.OffsetGetterWeb \

@@ -37,8 +37,23 @@ zookeeper:
     - consul:consul
     privileged: true
 
-kafka:
-    hostname: kafka
+kafka0:
+    hostname: kafka0
+    dns: 127.0.0.1
+    dns_search:
+    - node.consul
+    - service.consul
+    image: qnib/kafka
+    environment:
+    - DC_NAME=dc1
+    - FORWARD_TO_KAFKA=true
+    links:
+    - consul:consul
+    - zookeeper:zookeeper
+    privileged: true
+
+kafka1:
+    hostname: kafka1
     dns: 127.0.0.1
     dns_search:
     - node.consul
@@ -64,7 +79,7 @@ kafkaMonitor:
     - FORWARD_TO_KAFKA=true
     links:
     - consul:consul
-    - kafka:kafka
+    - kafka0:kafka
     ports:
     - 8080:8080
     privileged: true
