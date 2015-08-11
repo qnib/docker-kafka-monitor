@@ -1,0 +1,21 @@
+#!/bin/bash
+
+function check_zookeeper {
+    cnt_zk=$(curl -s localhost:8500/v1/catalog/service/zookeeper|grep -c "Node")
+    if [ ${cnt_zk} -ne 1 ];then
+        echo "[start_kafka-offset] No running 'zookeeper service yet, sleep 5 sec'"
+        sleep 5
+        check_zookeeper
+    fi
+}
+check_zookeeper
+sleep 5
+
+ZK_NODES={{range $tag, $services := service "zookeeper" "passing"| byTag}}{{if eq $tag "leader"}}{{range $services}}{{.Address}}:{{.Port}}{{end}}{{end}}{{end}}
+ZK_NODES=${ZK_NODES}{{range $tag, $services := service "zookeeper" | byTag}}{{if eq $tag "follower"}}{{range $services}},{{.Address}}:{{.Port}}{{end}}{{end}}{{end}}
+java -cp KafkaOffsetMonitor-assembly-0.2.1.jar \
+     com.quantifind.kafka.offsetapp.OffsetGetterWeb \
+     --zk ${ZK_NODES} \
+     --port 8080 \
+     --refresh 10.seconds \
+     --retain 2.days

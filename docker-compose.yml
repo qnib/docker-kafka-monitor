@@ -23,16 +23,43 @@ zkui:
     - 9090:9090
     privileged: true
 
-zookeeper:
-    hostname: zookeeper
+zookeeper0:
+    hostname: zookeeper0
     dns: 127.0.0.1
-    dns_search:
-    - node.consul
-    - service.consul
+    image: qnib/zookeeper
+    #volumes:
+    #- opt/qnib/zookeeper/bin/:/opt/qnib/zookeeper/bin/
+    environment:
+    - DC_NAME=dc1
+    - MYID=1
+    #- START_ZOOKEEPER=false
+    - SERVERS=zookeeper0.node.dc1.consul,zookeeper1.node.dc1.consul,zookeeper2.node.dc1.consul
+    links:
+    - consul:consul
+    ports:
+    - 2181:2181
+    privileged: true
+
+zookeeper1:
+    hostname: zookeeper1
+    dns: 127.0.0.1
     image: qnib/zookeeper
     environment:
     - DC_NAME=dc1
-    - FORWARD_TO_KAFKA=true
+    - MYID=2
+    - SERVERS=zookeeper0.node.dc1.consul,zookeeper1.node.dc1.consul,zookeeper2.node.dc1.consul
+    links:
+    - consul:consul
+    privileged: true
+
+zookeeper2:
+    hostname: zookeeper2
+    dns: 127.0.0.1
+    image: qnib/zookeeper
+    environment:
+    - DC_NAME=dc1
+    - MYID=3
+    - SERVERS=zookeeper0.node.dc1.consul,zookeeper1.node.dc1.consul,zookeeper2.node.dc1.consul
     links:
     - consul:consul
     privileged: true
@@ -49,7 +76,7 @@ kafka0:
     - FORWARD_TO_KAFKA=true
     links:
     - consul:consul
-    - zookeeper:zookeeper
+    - zookeeper0:zookeeper
     privileged: true
 
 kafka1:
@@ -64,7 +91,7 @@ kafka1:
     - FORWARD_TO_KAFKA=true
     links:
     - consul:consul
-    - zookeeper:zookeeper
+    - zookeeper0:zookeeper
     privileged: true
 
 kafkaMonitor:
