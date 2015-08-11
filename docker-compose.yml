@@ -1,0 +1,71 @@
+consul:
+    hostname: consul
+    image: qnib/consul
+    environment:
+    - DC_NAME=dc1
+    ports:
+    - "8500:8500"
+    dns: 127.0.0.1
+
+zkui:
+    hostname: zkui
+    dns: 127.0.0.1
+    dns_search:
+    - node.consul
+    - service.consul
+    image: qnib/zkui
+    environment:
+    - DC_NAME=dc1
+    - FORWARD_TO_KAFKA=true
+    links:
+    - consul:consul
+    ports:
+    - 9090:9090
+    privileged: true
+
+zookeeper:
+    hostname: zookeeper
+    dns: 127.0.0.1
+    dns_search:
+    - node.consul
+    - service.consul
+    image: qnib/zookeeper
+    environment:
+    - DC_NAME=dc1
+    - FORWARD_TO_KAFKA=true
+    links:
+    - consul:consul
+    privileged: true
+
+kafka:
+    hostname: kafka
+    dns: 127.0.0.1
+    dns_search:
+    - node.consul
+    - service.consul
+    image: qnib/kafka
+    environment:
+    - DC_NAME=dc1
+    - FORWARD_TO_KAFKA=true
+    links:
+    - consul:consul
+    - zookeeper:zookeeper
+    privileged: true
+
+kafkaMonitor:
+    hostname: kafka-monitor
+    dns: 127.0.0.1
+    dns_search:
+    - node.consul
+    - service.consul
+    image: qnib/kafka-monitor
+    environment:
+    - DC_NAME=dc1
+    - FORWARD_TO_KAFKA=true
+    links:
+    - consul:consul
+    - kafka:kafka
+    ports:
+    - 8080:8080
+    privileged: true
+

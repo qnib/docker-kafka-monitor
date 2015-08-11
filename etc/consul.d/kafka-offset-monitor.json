@@ -1,0 +1,14 @@
+{
+  "services": [
+    {
+        "id": "kafka-monitor",
+        "name": "kafka-monitor",
+        "tags": [],
+        "port": 8080,
+        "checks": [{
+            "script": "nmap -n localhost -p 8080|egrep '^8080.*open'",
+            "interval": "10s"
+        }]
+    }
+  ]
+}
