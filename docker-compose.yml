@@ -111,3 +111,20 @@ kafkaMonitor:
     - 8080:8080
     privileged: true
 
+logstash:
+    hostname: logstash
+    dns: 127.0.0.1
+    dns_search:
+    - node.consul
+    - service.consul
+    image: qnib/logstash:trunk
+    volumes:
+    - ./ls_conf/:/etc/logstash/conf.d/
+    environment:
+    - DC_NAME=dc1
+    - FORWARD_TO_FILE=true
+    links:
+    - consul:consul
+    - kafka0:kafka
+    privileged: true
+
