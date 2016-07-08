@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/local/dumb-init /bin/bash
 
 if [ "X${ZK_DC}" != "X" ];then
     sed -i'' -E "s#service \"zookeeper(@\w+)?\"#service \"zookeeper@${ZK_DC}\"#" /etc/consul-templates/zkui.conf.ctmpl

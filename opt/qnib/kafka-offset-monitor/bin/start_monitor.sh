@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/local/dumb-init /bin/bash
 
 function check_zookeeper {
     DC_QUERY=""
