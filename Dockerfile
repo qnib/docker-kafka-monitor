@@ -1,9 +1,13 @@
 ###### grafana images
 FROM qnib/java8
 
+ENV KAFKA_MONITOR_VER=0.3.0 \
+    KAFKA_MONITOR_SUFFIX=-SNAPSHOT \
+    KAFKA_MONITOR_OFFSET_STORAGE=zookeeper
+
 RUN dnf install -y nmap \
- && curl -Ls -o /opt/KafkaOffsetMonitor-assembly-0.2.1.jar \
-         https://github.com/quantifind/KafkaOffsetMonitor/releases/download/v0.2.1/KafkaOffsetMonitor-assembly-0.2.1.jar
+ && curl -Ls -o /opt/KafkaOffsetMonitor-assembly-${KAFKA_MONITOR_VER}${KAFKA_MONITOR_SUFFIX}.jar \
+         https://github.com/ChristianKniep/KafkaOffsetMonitor/releases/download/v${KAFKA_MONITOR_VER}/KafkaOffsetMonitor-assembly-${KAFKA_MONITOR_VER}${KAFKA_MONITOR_SUFFIX}.jar
 ADD etc/supervisord.d/*.ini /etc/supervisord.d/
 ADD opt/qnib/kafka-offset-monitor/bin/ /opt/qnib/kafka-offset-monitor/bin/
 ADD etc/consul.d/kafka-offset-monitor.json /etc/consul.d/

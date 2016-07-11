@@ -22,8 +22,9 @@ fi
 
 
 ZK_NODES={{range $i, $e := service "zookeeper" "any"}}{{if ne $i 0}},{{end}}{{$e.Address}}:{{$e.Port}}{{end}}
-java -cp KafkaOffsetMonitor-assembly-0.2.1.jar \
+java -cp KafkaOffsetMonitor-assembly-${KAFKA_MONITOR_VER}${KAFKA_MONITOR_SUFFIX}.jar \
      com.quantifind.kafka.offsetapp.OffsetGetterWeb \
+     --offsetStorage {{ env "KAFKA_MONITOR_OFFSET_STORAGE" }} \
      --zk ${ZK_NODES} \
      --port 8080 \
      --refresh 10.seconds \
