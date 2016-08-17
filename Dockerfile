@@ -1,9 +1,9 @@
 ###### grafana images
 FROM qnib/java8
 
-ENV KAFKA_MONITOR_VER=0.3.0 \
-    KAFKA_MONITOR_SUFFIX=-SNAPSHOT \
-    KAFKA_MONITOR_OFFSET_STORAGE=zookeeper
+ARG KAFKA_MONITOR_VER=0.3.0
+ARG KAFKA_MONITOR_SUFFIX=-SNAPSHOT
+ENV KAFKA_MONITOR_OFFSET_STORAGE=zookeeper
 
 RUN dnf install -y nmap \
  && curl -Ls -o /opt/KafkaOffsetMonitor-assembly-${KAFKA_MONITOR_VER}${KAFKA_MONITOR_SUFFIX}.jar \
