@@ -1,8 +1,9 @@
 consul:
     hostname: consul
-    image: qnib/consul
+    image: qnib/alpn-consul
     environment:
     - DC_NAME=dc1
+    - CONSUL_BOOTSTRAP_EXPECT=1
     ports:
     - "8500:8500"
     dns: 127.0.0.1
